@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import PostCard from '../../components/PostCard.astro'
+import { getCollection } from 'astro:content'
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+---
+<BaseLayout title="All Posts">
+  <div style="padding: 4rem 0;">
+    <div class="container">
+      <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">All Posts</h1>
+      <p style="color: var(--muted); margin-bottom: 3rem;">{posts.length} {posts.length === 1 ? 'post' : 'posts'} so far.</p>
+      <div style="display: grid; gap: 1.5rem;">
+        {posts.map(post => (
+          <PostCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            slug={post.slug}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

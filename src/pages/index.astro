@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import PostCard from '../components/PostCard.astro'
+import { getCollection } from 'astro:content'
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+---
+<BaseLayout title="Home">
+
+  <!-- Hero -->
+  <section style="
+    background: linear-gradient(135deg, #fdf4ff 0%, var(--surface) 40%, #e0f2fe 100%);
+    padding: 5rem 0 4rem;
+    text-align: center;
+  ">
+    <div class="container">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">✦</div>
+      <h1 style="font-size: 3rem; background: linear-gradient(135deg, var(--primary) 0%, #db2777 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem;">
+        AI Vibe Dreams
+      </h1>
+      <p style="font-size: 1.2rem; color: var(--muted); max-width: 48ch; margin: 0 auto 2rem;">
+        Real projects built with AI assistance — from idea to shipped, documented honestly along the way.
+      </p>
+      <a href="/blog" style="
+        display: inline-block;
+        background: var(--primary);
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: background 0.2s;
+      ">Read the posts →</a>
+    </div>
+  </section>
+
+  <!-- Latest posts -->
+  <section style="padding: 4rem 0;">
+    <div class="container">
+      <h2 style="font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 2rem; border: none; padding: 0; margin-top: 0;">
+        Latest
+      </h2>
+      {posts.length === 0 ? (
+        <p style="color: var(--muted);">No posts yet — check back soon.</p>
+      ) : (
+        <div style="display: grid; gap: 1.5rem;">
+          {posts.map(post => (
+            <PostCard
+              title={post.data.title}
+              description={post.data.description}
+              date={post.data.date}
+              slug={post.slug}
+              tags={post.data.tags}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+</BaseLayout>

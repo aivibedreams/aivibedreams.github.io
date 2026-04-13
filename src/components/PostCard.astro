@@ -1,0 +1,37 @@
+---
+import { TAG_COLORS } from '../lib/tags'
+
+interface Props {
+  title: string
+  description: string
+  date: Date
+  slug: string
+  tags: string[]
+}
+const { title, description, date, slug, tags } = Astro.props
+const formatted = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+---
+<a href={`/blog/${slug}`} style="text-decoration: none; display: block;">
+  <article style="
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  "
+  onmouseover="this.style.boxShadow='0 8px 30px rgba(109,40,217,0.1)'; this.style.transform='translateY(-2px)'; this.style.borderColor='var(--primary)';"
+  onmouseout="this.style.boxShadow=''; this.style.transform=''; this.style.borderColor='var(--border)';"
+  >
+    <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem;">
+      {tags.map(tag => (
+        <span class={`tag ${TAG_COLORS[tag] ?? ''}`}>{tag}</span>
+      ))}
+    </div>
+    <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 0 0 0.6rem; border: none; padding: 0;">{title}</h2>
+    <p style="color: var(--muted); font-size: 0.925rem; margin: 0 0 1rem; line-height: 1.5;">{description}</p>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <time style="font-size: 0.8rem; color: var(--muted); font-weight: 500;">{formatted}</time>
+      <span style="font-size: 0.85rem; font-weight: 600; color: var(--primary);">Read →</span>
+    </div>
+  </article>
+</a>
